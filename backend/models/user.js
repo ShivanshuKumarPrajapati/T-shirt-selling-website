@@ -3,7 +3,7 @@ const crypto =require('node:crypto');
 const {v4 : uuidv4} = require('uuid')
 
 
-const userSchema = mongoose.Schema({
+const userSchema =new mongoose.Schema({
     name:{
         type:String,
         required: true,
@@ -48,7 +48,7 @@ userSchema.virtual("password")
     })
     .get(function(){
         return this._password;
-    })
+    },{timestamps:true});
 
 userSchema.method = {
 
