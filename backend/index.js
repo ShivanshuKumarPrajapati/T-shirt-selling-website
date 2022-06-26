@@ -4,7 +4,8 @@ const mongoose =require('mongoose');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
-const authRotues = require('./routes/auth')
+const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
 
 
 const app = express();
@@ -21,8 +22,8 @@ mongoose.connect(url).
       catch(error => console.log(error));
 
 
-app.use('/api',authRotues)
-
+app.use('/api',authRoutes);
+app.use('/api',userRoutes);
 
 
 app.listen(port,function(){
