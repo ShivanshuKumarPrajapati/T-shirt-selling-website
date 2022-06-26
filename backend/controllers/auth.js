@@ -1,5 +1,7 @@
 const User = require('../models/user');
 const {validationResult} = require('express-validator');
+const {expressjwt:expressJwt}= require('express-jwt');
+const jwt = require('jsonwebtoken');
 
 exports.signup = (req,res)=>{
     
@@ -24,6 +26,69 @@ exports.signup = (req,res)=>{
     })
 }
 
+exports.signin = (req,res) => {
+    const {email,password} = req.body;
+
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(422).json({error:errors.array()[0].msg});
+    }
+
+    User.findOne({email}, (err,user)=>{
+        if(err || !user){
+            return res.status(400).json({
+                error: 'USER email does not exists'
+            })
+        }
+
+        if(!user.authenticate(password)){
+            return res.status(401).json({
+                error: "Email and password do not match"
+            })
+        }
+
+        const token = jwt.sign({_id:user._id},process.env.JWT_SECRET)
+
+        res.cookie("token",token,{expire:new Date() + 9999});
+
+        const {_id,name,email,role} = user;
+        return res.json({token,user:{_id,name,email,role}});
+    })
+
+}
+
+
 exports.signout = (req,res)=>{
-    res.send("user is signout");
+    res.clearCookie('token');
+    res.json({
+        message:"User Signout successfully"
+    });
+}
+
+
+//protected routes
+exports.isSignedIn = expressJwt({
+    secret: process.env.JWT_SECRET,
+    algorithms: ["HS256"], 
+    userProperty: 'auth'
+});
+
+//custom middleware
+exports.isAuthenticated = (req,res,next) =>{
+    let checker = req.profile && req.auth && req.profile._id === req.auth._id;
+    if(!checker){
+        return res.status(403).json({
+            error: "Access denied"
+        })
+    } 
+    next();
+}
+
+exports.isAdmin = (res,req,next) => {
+if(req.profile.role === 0){
+    return res.status(403).json({
+        error: "Not an Admin"
+    });
+}
+next();
 }
