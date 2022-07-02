@@ -7,6 +7,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const categoryRoutes = require('./routes/category');
+const productRoutes = require('./routes/product');
 
 
 const app = express();
@@ -25,7 +26,8 @@ mongoose.connect(url).
 
 app.use('/api',authRoutes);
 app.use('/api',userRoutes);
-app.use('/api',categoryRoutes)
+app.use('/api',categoryRoutes);
+app.use('/api',productRoutes)
 
 app.listen(port,function(){
     console.log('Server is running at',port);
