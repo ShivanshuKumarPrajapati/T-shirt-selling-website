@@ -8,17 +8,21 @@ const Base = ({
     children
 }) => {
   return (
-      <div>
+      <div className='parent'>
       <Nav/>
-          <div className="container-fluid">
-              <div className="jumbotron bg-dark text-white text-center">
+          <div className="container-fluid px-0">
+              <div className="jumbotron bg-dark text-white text-center ">
                   <h2 className="display-4">{title}</h2>
                   <p className="lead">{description}</p>
               </div>
+              <div className='bg-dark h-100'>
               <div className={`${className}`}>
                   {children}
               </div>
-              <footer className="footer bg-dark mt-auto py-3">
+              </div>
+          </div>
+          <div>
+              <footer className="bg-dark mt-auto py-3">
                   <div className="container-fluid bg-success text-white text-center py-3">
                       <h4>If you get question, feel freee to reach out</h4>
                       <button className="btn btn-warning btn-lg my-3">Contact us</button>
