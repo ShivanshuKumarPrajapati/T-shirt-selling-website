@@ -1,6 +1,7 @@
-import React from 'react'
-import {Link,useLocation} from 'react-router-dom'
+import React, { Fragment } from 'react'
+import {Link,useLocation,useNavigate} from 'react-router-dom'
 
+import { isAuthenticated,signout } from '../auth/helper';
 
 const currentTab = (path) => {
     const location = useLocation();
@@ -12,7 +13,9 @@ const currentTab = (path) => {
     }
 }
 
-const Nav = ({history}) => {
+const Nav = () => {
+  
+  const navigate = useNavigate();
   return (
     <div>
       <ul className="nav nav-tabs bg-dark">
@@ -26,51 +29,64 @@ const Nav = ({history}) => {
             Cart
           </Link>
         </li>
-        <li className="nav-item">
-          <Link
-            style={currentTab("/user/dashboard")}
-            className="nav-link"
-            to={"/user/dashbaord"}
-          >
-            Dashboard
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link
-            style={currentTab("/admin/dashboard")}
-            className="nav-link"
-            to={"/admin/dashboard"}
-          >
-            Admin Dashboard
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link
-            style={currentTab("/signup")}
-            className="nav-link"
-            to={"/signup"}
-          >
-            Signup
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link
-            style={currentTab("/signin")}
-            className="nav-link"
-            to={"/signin"}
-          >
-            SignIn
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link
-            style={currentTab("/signout")}
-            className="nav-link"
-            to={"/signout"}
-          >
-            Signout
-          </Link>
-        </li>
+        {isAuthenticated() && isAuthenticated().user.role === 0 && (
+          <li className="nav-item">
+            <Link
+              style={currentTab("/user/dashboard")}
+              className="nav-link"
+              to={"/user/dashboard"}
+            >
+              Dashboard
+            </Link>
+          </li>
+        )}
+        {isAuthenticated() && isAuthenticated().user.role === 1 && (
+          <li className="nav-item">
+            <Link
+              style={currentTab("/admin/dashboard")}
+              className="nav-link"
+              to={"/admin/dashboard"}
+            >
+              Admin Dashboard
+            </Link>
+          </li>
+        )}
+        {!isAuthenticated() && (
+          <Fragment>
+            <li className="nav-item">
+              <Link
+                style={currentTab("/signup")}
+                className="nav-link"
+                to={"/signup"}
+              >
+                Signup
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                style={currentTab("/signin")}
+                className="nav-link"
+                to={"/signin"}
+              >
+                SignIn
+              </Link>
+            </li>
+          </Fragment>
+        )}
+        {isAuthenticated() && (
+          <li className="nav-item">
+            <span
+              className="nav-link text-warning"
+              onClick={() => {
+                signout(() => {
+                  navigate("/");
+                });
+              }}
+            >
+              Signout
+            </span>
+          </li>
+        )}
       </ul>
     </div>
   );
