@@ -24,7 +24,7 @@ const productSchema = new mongoose.Schema({
         ref:'Category',
         required:true
     },
-    stocks:{
+    stock:{
         type:Number
     },
     sold:{

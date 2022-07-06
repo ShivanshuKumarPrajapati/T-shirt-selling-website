@@ -17,7 +17,7 @@ router.get('/products',getAllProduct);
 router.get('/products/categories',getAllUniqueCategories);
 
 //delete routes
-router.post('/product/:productId/:userId',isSignedIn,isAuthenticated,isAdmin,removeProduct);
+router.delete('/product/:productId/:userId',isSignedIn,isAuthenticated,isAdmin,removeProduct);
 
 //update routes
 router.put('/product/:productId/:userId',isSignedIn,isAuthenticated,isAdmin,updateProduct);
