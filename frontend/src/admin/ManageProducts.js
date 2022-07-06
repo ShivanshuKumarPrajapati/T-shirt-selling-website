@@ -26,7 +26,6 @@ const ManageProducts = () => {
 
     
     const deleteProductFxn = (productId) => {
-        console.log(productId);
         deleteProduct(productId, user._id, token).then((data) => {
           if (data.error) {
             console.log(data.error);
