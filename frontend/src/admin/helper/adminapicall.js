@@ -63,13 +63,15 @@ export const deleteProduct = (productId,userId, token) => {
     method: "DELETE",
     headers: {
       Accept: "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`
     }
   })
     .then((res) => {
       return res.json();
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err)
+    });
 };
 
 //get product

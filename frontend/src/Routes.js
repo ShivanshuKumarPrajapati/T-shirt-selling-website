@@ -9,8 +9,10 @@ import PrivateRoutes from './auth/helper/PrivateRoutes';
 import UserDashBoard from './user/UserDashBoard';
 import AdminDashBoard from './user/AdminDashBoard';
 import AddCategory from './admin/AddCategory';
-import ManageCategories from './admin/helper/ManageCategories';
+import ManageCategories from './admin/ManageCategories';
 import AddProduct from './admin/AddProduct';
+import ManageProducts from './admin/ManageProducts';
+import UpdateProduct from './admin/UpdateProduct';
 
 const RouteFxn = () => {
   return (
@@ -60,6 +62,24 @@ const RouteFxn = () => {
           element={
             <AdminRoute>
               <AddProduct />
+            </AdminRoute>
+          }
+        />
+        <Route
+          exact
+          path="/admin/products"
+          element={
+            <AdminRoute>
+              <ManageProducts />
+            </AdminRoute>
+          }
+        />
+        <Route
+          exact
+          path="/admin/product/update/:productId"
+          element={
+            <AdminRoute>
+              <UpdateProduct />
             </AdminRoute>
           }
         />

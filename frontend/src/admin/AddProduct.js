@@ -1,29 +1,111 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import Base from "../core/Base";
+import { getCategories, createProduct } from "./helper/adminapicall";
+import { isAuthenticated } from "../auth/helper";
 
 const AddProduct = () => {
+  const { user, token } = isAuthenticated();
 
-    const [values, setValues] = useState({
-        name: "",
-        description: "",
-        price: "",
-        stock:""
+  const [values, setValues] = useState({
+    name: "",
+    description: "",
+    price: "",
+    stock: "",
+    photo: "",
+    categories: [],
+    category: "",
+    loading: false,
+    error: "",
+    createdProduct: "",
+    getRedirect: false,
+    formData: "",
+  });
+
+  const {
+    name,
+    description,
+    price,
+    stock,
+    photo,
+    categories,
+    category,
+    loading,
+    error,
+    createdProduct,
+    getRedirect,
+    formData,
+  } = values;
+
+  const preload = () => {
+    getCategories().then((data) => {
+      if (data.error) {
+        setValues({ ...values, error: data.error });
+      } else {
+        setValues({ ...values, categories: data, formData: new FormData() });
+      }
     });
+  };
 
-    const { name, description, price, stock } = values;
+  useEffect(() => {
+    preload();
+  }, []);
 
-    const onSubmit = () => {
-    
-}
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setValues({ ...values, error: "", loading: true });
+    console.log(values.stock);
+    createProduct(user._id, token, formData).then((data) => {
+      if (data.error) {
+        setValues({ ...values, error: data.error });
+      } else {
+        setValues({
+          ...values,
+          name: "",
+          description: "",
+          price: "",
+          photo: "",
+          stock: "",
+          loading: false,
+          createdProduct: data.name,
+        });
+        setTimeout(() => {
+          setValues({ createdProduct: '' });
+        },2000)
+      }
+    });
+  };
 
-    const handleChange = () => {
-    
-}
+  const handleChange = (name) => (event) => {
+    const value = name === "photo" ? event.target.files[0] : event.target.value;
+    formData.set(name, value);
+    setValues({ ...values, [name]: value });
+  };
 
-
+    const successMessage = () => {
+      return (
+        <div
+          className="alert alert-success mt-3"
+          style={{ display: createdProduct ? "" : 'none' }}
+        >
+          <h4>{createdProduct} created successfully</h4>
+        </div>
+      );
+    };
+  
+  const warningMessage = () => {
+    return (
+      <div
+        className="alert alert-danger mt-3"
+        style={{ display: error ? "" : "none" }}
+      >
+        <h4>{error}</h4>
+      </div>
+    );
+  };
+  
   const createProductForm = () => (
     <form>
       <span>Post photo</span>
@@ -72,16 +154,22 @@ const AddProduct = () => {
           placeholder="Category"
         >
           <option>Select</option>
-          <option value="a">a</option>
-          <option value="b">b</option>
+          {categories &&
+            categories.map((ctgry, index) => {
+              return (
+                <option key={index} value={ctgry._id}>
+                  {ctgry.name}
+                </option>
+              );
+            })}
         </select>
       </div>
       <div className="form-group  mt-3">
         <input
-          onChange={handleChange("quantity")}
+          onChange={handleChange("stock")}
           type="number"
           className="form-control"
-          placeholder="Quantity"
+          placeholder="Stock"
           value={stock}
         />
       </div>
@@ -96,6 +184,7 @@ const AddProduct = () => {
     </form>
   );
 
+
   return (
     <Base
       title="Add product here!"
@@ -103,18 +192,19 @@ const AddProduct = () => {
       className="container bg-dark p-4"
     >
       <div className="row bg-white rounded">
-              <div className="col-md-8 offset-md-2 ">
-                  
-                  {createProductForm()}
-            <div className="mt-5">
+        <div className="col-md-8 offset-md-2 ">
+          {successMessage()}
+          {warningMessage()}
+          {createProductForm()}
+          <div className="mt-5">
             <Link
-                className="btn btn-sm btn-outline-danger mb-3 px-3 rounded-3"
-                to="/admin/dashboard"
+              className="btn btn-sm btn-outline-danger mb-3 px-3 rounded-3"
+              to="/admin/dashboard"
             >
-                Back
+              Back
             </Link>
-            </div>
-              </div>
+          </div>
+        </div>
       </div>
     </Base>
   );
