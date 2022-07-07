@@ -14,6 +14,7 @@ import UpdateCategory from './admin/UpdateCategory';
 import AddProduct from './admin/AddProduct';
 import ManageProducts from './admin/ManageProducts';
 import UpdateProduct from './admin/UpdateProduct';
+import Cart from './core/Cart';
 
 const RouteFxn = () => {
   return (
@@ -22,6 +23,8 @@ const RouteFxn = () => {
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
+        <Route path="/cart" element={<Cart />} />
+
         <Route
           path="/user/dashboard"
           element={
