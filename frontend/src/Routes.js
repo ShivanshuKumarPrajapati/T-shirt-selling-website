@@ -15,6 +15,7 @@ import AddProduct from './admin/AddProduct';
 import ManageProducts from './admin/ManageProducts';
 import UpdateProduct from './admin/UpdateProduct';
 import Cart from './core/Cart';
+import Contact from './core/Contact';
 
 const RouteFxn = () => {
   return (
@@ -24,6 +25,7 @@ const RouteFxn = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/contact" element={<Contact />} />
 
         <Route
           path="/user/dashboard"

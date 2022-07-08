@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Base from './Base';
 import Card from './Card';
 import { loadCart } from './helper/CartHelper';
+import Payment from './Payment';
 
 
 const Cart = () => {
@@ -15,10 +16,10 @@ const Cart = () => {
       setProducts(loadCart);
     }, [reload]);
 
-    const loadAllProducts = () => {
+    const loadAllProducts = (products) => {
         return (
             <div>
-                <h2>This is for laod products</h2>
+                <h2 className='mb-4'>Yours items</h2>
                 {products.map((product, index) => {
                     return (
                         <Card
@@ -34,23 +35,19 @@ const Cart = () => {
         );
     }
 
-     const loadCheckout = () => {
-       return (
-         <div>
-           <h2>This is for checkout</h2>
-         </div>
-       );
-     };
-    
 
   return (
-    <Base title="home Page" description="Welcome to t-shirt store">
+    <Base title="Cart Page" description="Welcome to your cart">
       <div className="row text-center">
               <div className="col-6">
-              {loadAllProducts()}
+                  {products.length > 0 ?
+                      loadAllProducts(products) :
+                      (
+                          <h3>No products in cart</h3>
+              )}
               </div>
               <div className="col-6">
-              {loadCheckout()}
+                  <Payment products={products} setReload={setReload} reload={reload} />
               </div>
       </div>
     </Base>

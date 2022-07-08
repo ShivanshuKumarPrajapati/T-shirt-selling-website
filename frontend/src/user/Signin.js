@@ -10,8 +10,8 @@ const Signin = () => {
   const navigate = useNavigate();
 
     const [values, setValues] = useState({
-      email: "shiv@gmail.com",
-      password: "sakshi",
+      email: "",
+      password: "",
       error: "",
       loading: false,
       didRedirect: false
